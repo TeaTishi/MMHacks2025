@@ -99,7 +99,7 @@ def main():
                 running = False
 
         screen.fill(background_colour)
-        player.draw(screen)  # Draw the player on the screen
+        player.draw("player.png",screen)  # Draw the player on the screen
 
         pygame.display.flip()
         clock.tick(FPS)
