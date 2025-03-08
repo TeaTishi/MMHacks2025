@@ -90,7 +90,7 @@ while running:
     screen.blit(background_colour, (0, 0))
 
     # Update the display
-    pygame.display.flip()
+    #pygame.display.flip()
     redrawGameWindow()
 
 pygame.quit()
