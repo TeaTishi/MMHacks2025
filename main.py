@@ -19,8 +19,8 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(object):
-    walkRight = [pygame.image.load('assets/rats/rightrat.png')]
-    walkLeft = [pygame.image.load('assets/rats/leftrat.png')]
+    walkRight = [pygame.image.load('assets/rats/rightrat_resized.png')]
+    walkLeft = [pygame.image.load('assets/rats/leftrat_resized.png')]
 
     def __init__(self, x, y, width, height, end):
         self.x = x
