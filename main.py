@@ -127,7 +127,7 @@ class Tilemap:
             y_pos = tile['pos'][1] * self.tile_size  # Y coordinate of the tile
 
             # Render the tile on the screen
-            surf.blit(tile_image, (x_pos, y_pos))
+            surf.blit(tile_image, (x_pos, y_pos)) 
 
         # Optionally render any offgrid tiles if needed
         for tile in self.offgrid_tiles:
