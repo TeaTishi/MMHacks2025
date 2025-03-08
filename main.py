@@ -1,34 +1,32 @@
-# import pygame 
+import pygame 
 
 
-# WIDTH = 1920
-# HEIGHT = 1080
-# background_colour = (234, 212, 252) 
+WIDTH = 1920
+HEIGHT = 1080
+background_colour = (234, 212, 252) 
 
-# FPS = 60
+FPS = 60
   
-# screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
   
-# pygame.display.set_caption('M') 
+pygame.display.set_caption('M') 
   
-# screen.fill(background_colour) 
+screen.fill(background_colour) 
 
-# pygame.display.flip() 
+pygame.display.flip() 
 
-# # def get_background(name):
-#     # image = pygame.image.load(join("assests", name))
+# def get_background(name):
+    # image = pygame.image.load(join("assests", name))
+
+def main(screen):
 
 
 
-
-
-# running = True
-# while running: 
-
-#     player = Player()
-#     for event in pygame.event.get():            
-#         if event.type == pygame.QUIT: 
-#             running = False
+    running = True
+    while running: 
+        for event in pygame.event.get():            
+            if event.type == pygame.QUIT: 
+                running = False
 
 
 # def main (window):
@@ -99,7 +97,7 @@ def main():
                 running = False
 
         screen.fill(background_colour)
-        player.draw("player.png",screen)  # Draw the player on the screen
+        player.draw(screen)  # Draw the player on the screen
 
         pygame.display.flip()
         clock.tick(FPS)
