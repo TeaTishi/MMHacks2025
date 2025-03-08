@@ -57,21 +57,3 @@
 
 
 
-# player.py
-import pygame
-
-class Player(pygame.sprite.Sprite):
-    COLOR = (255, 0, 0)
-    
-    def __init__(self, x, y, width, height):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(self.COLOR)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-        self.x_velocity = 0
-        self.y_velocity = 0
-
-    def draw(self, screen):
-        screen.blit(self.image, self.rect)
