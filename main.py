@@ -189,6 +189,10 @@ def redrawGameWindow():
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
 
+def check_collision (player, cat):
+    return player.rect.colliderect(cat.rect)
+
+
 running = True
 while running:
     clock.tick(FPS)
@@ -222,6 +226,10 @@ while running:
 
     if check_collision(player, rat):
         player.get_damage()
+        print("you lose!")
+
+    if check_collision(player, cat):
+        print("you win!")
 
     redrawGameWindow()
 
