@@ -1,9 +1,10 @@
 
-x_coord =0
-y_coord =0
+
 
 class Player(pygame.sprite.sprite):
     COLOR = (255, 0,0)
+    x_coord =0
+    y_coord =0
     def __init__ (self, x_coord, y_coord, width, height):
         self.rect = pygame.Rect(x, y, width, height)
         self.x_velocity = 0

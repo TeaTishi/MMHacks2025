@@ -17,6 +17,9 @@ def get_background(name):
     image = pygame.image.load(join("assests", "Background", name))
 
 def main(screen):
+
+    #player = Player(100,100,50,50)
+
     running = True
     while running: 
         for event in pygame.event.get():            
