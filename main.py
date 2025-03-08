@@ -147,7 +147,6 @@ while running:
 
     # Update the display
     #pygame.display.flip()
-    redrawGameWindow()
 
 
     keys = pygame.key.get_pressed()
