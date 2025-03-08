@@ -15,7 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity = 0
 
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
 
 
 class Enemy(object):
