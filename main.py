@@ -1,5 +1,7 @@
 import pygame
 
+#from MMHacks2025.enemies import background_colour
+
 
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
@@ -58,7 +60,9 @@ pygame.init()
 
 WIDTH = 1920
 HEIGHT = 1080
-background_colour = (234, 212, 252)
+#background_colour = (234, 212, 252)
+background_colour = pygame.image.load('assets/background.jpg')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('M')
@@ -70,7 +74,7 @@ player = Player(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT)
 rat = Enemy(100, 100, 100, 100, 1000)
 
 def redrawGameWindow():
-    screen.fill(background_colour)
+    #screen.fill(background_colour)
     player.draw(screen)
     rat.draw(screen)
     pygame.display.update()
@@ -82,6 +86,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    # Draw the background image
+    screen.blit(background_colour, (0, 0))
+
+    # Update the display
+    pygame.display.flip()
     redrawGameWindow()
 
 pygame.quit()
