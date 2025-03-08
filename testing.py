@@ -151,9 +151,6 @@ class Game:
             print(f"Error: {img_path} not found!")  # Print error if image is missing
 
 
-
-
-
 pygame.init()
 
 WIDTH = 1920
