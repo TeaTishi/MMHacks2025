@@ -1,5 +1,5 @@
 
-
+import pygame
 
 class Player(pygame.sprite.sprite):
     COLOR = (255, 0,0)
