@@ -15,7 +15,7 @@ class Cat(object):
         self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, screen):
-        screen.blit(pygame.image.load("assets/cat/cat2.png"), self.rect)
+        screen.blit(pygame.image.load("assets/cat/cat.png"), self.rect)
 
         self.rect.x = self.x
         self.rect.y = self.y
