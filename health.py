@@ -14,13 +14,25 @@ class Player(pygame.sprite.Sprite):
         self.x_velocity = 0
         self.y_velocity = 0
 
+        self.health = 3
+        self.max_health = 3
+
     def draw(self, screen):
         screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
 
+    def get_damage(self):
+        if self.health > 0:
+            self.health -= 1
+
+    def get_health(self):
+        if self.health > self.max_health:
+            self.health -= 1
+
+    def update()
 
 class Enemy(object):
-    walkRight = [pygame.image.load('assets/rats/rightrat.png')]
-    walkLeft = [pygame.image.load('assets/rats/leftrat.png')]
+    walkRight = [pygame.image.load('assets/rats/rightrat_resized.png')]
+    walkLeft = [pygame.image.load('assets/rats/leftrat_resized.png')]
 
     def __init__(self, x, y, width, height, end):
         self.x = x
@@ -30,6 +42,7 @@ class Enemy(object):
         self.path = [x, end]
         self.walkCount = 0
         self.velocity = 3
+        self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, screen):
         self.move()
@@ -40,6 +53,9 @@ class Enemy(object):
             screen.blit(self.walkRight[0], (self.x, self.y))
         else:
             screen.blit(self.walkLeft[0], (self.x, self.y))
+
+        self.rect.x = self.x
+        self.rect.y = self.y
 
     def move(self):
         if self.velocity > 0:
@@ -75,6 +91,9 @@ def redrawGameWindow():
     rat.draw(screen)
     pygame.display.update()
 
+def check_collision(player, enemy):
+    return player.rect.colliderect(enemy.rect)
+
 running = True
 while running:
     clock.tick(FPS)
@@ -82,6 +101,22 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_a]:
+        player.x_velocity = -player.speed
+    elif keys[pygame.K_d]:
+        player.x_velocity = player.speed
+    else:
+        player.x_velocity = 0
+
+    if keys[pygame.K_w]:  # Move up
+        player.y_velocity = -player.speed
+    elif keys[pygame.K_s]:  # Move down
+        player.y_velocity = player.speed
+    else:
+        player.y_velocity = 0
+    if check_collision(player, rat):
+        player.get_damage()
     redrawGameWindow()
 
 pygame.quit()
