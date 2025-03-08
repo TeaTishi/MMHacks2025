@@ -86,16 +86,22 @@ class Enemy(object):
                 self.velocity = self.velocity * -1
 
 class Health:
-    def __init__(self, max_health, heart_filled_path, heart_unfilled_path, x=10, y=10, spacing=5):
+    def __init__(self, max_health, heart_filled_path, heart_unfilled_path, x, y, spacing, size):
         self.max_health = max_health
-        self.heart_filled = pygame.image.load(heart_filled_path)
-        self.heart_unfilled = pygame.image.load(heart_unfilled_path)  # Load unfilled heart image
-        self.heart_size = self.heart_filled.get_size()  # Get the size of the heart images
+        self.heart_filled = self.load_and_resize_image(heart_filled_path, size)
+        self.heart_unfilled = self.load_and_resize_image(heart_unfilled_path, size)
+        self.heart_size = self.heart_filled.get_size()
         self.x = x
         self.y = y
         self.spacing = spacing
 
+    def load_and_resize_image(self, path, size):
+       
+        image = pygame.image.load(path)
+        return pygame.transform.scale(image, size)
+
     def draw(self, screen, current_health):
+        
         for i in range(self.max_health):
             if i < current_health:
                 screen.blit(self.heart_filled, (self.x + i * (self.heart_size[0] + self.spacing), self.y))
@@ -122,7 +128,8 @@ health_display = Health(
     heart_unfilled_path="assets/heart/emptyHeart.png",
     x=10,
     y=10,
-    spacing=5
+    spacing=5,
+    size=(30, 30)
 )
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
@@ -147,11 +154,6 @@ while running:
 
     # Draw the background image
     screen.blit(background_colour, (0, 0))
-
-    # Update the display
-    #pygame.display.flip()
-    redrawGameWindow()
-
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
