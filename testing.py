@@ -1,93 +1,78 @@
-# import the pygame module 
-import pygame 
-
-# Define the background colour 
-# using RGB color coding. 
-background_colour = (234, 212, 252) 
-
-# Define the dimensions of 
-# screen object(width,height) 
-screen = pygame.display.set_mode((300, 300)) 
-
-# Set the caption of the screen 
-pygame.display.set_caption('Geeksforgeeks') 
-
-# Fill the background colour to the screen 
-screen.fill(background_colour) 
-
-# Update the display using flip 
-pygame.display.flip() 
-
-# Variable to keep our game loop running 
-running = True
-
-# game loop 
-while running: 
-	
-# for loop through the event queue 
-	for event in pygame.event.get(): 
-	
-		# Check for QUIT event	 
-		if event.type == pygame.QUIT: 
-			running = False
 import pygame
+import os
 
-class Object(pygame.sprite.Sprite):
-    def __init__ (self, x, y, width, height, name=None):
-        super().__init__()
-        self.rect = pygame.Rect(x, y, width, height)
-        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
-        self.width = width
-        self.height = height
-        self.name = name
-    
-    def draw (self, win):
-        win.blit(self.image, (self.rect.x, self. rect.y))
+# Game class to manage assets and loading images
+class Game:
+    def __init__(self):
+        self.assets = {}
+        self.load_assets()
+
+    def load_assets(self):
+        # Load images for 'grass' type from the assets folder
+        grass_images = []
+        img_path = os.path.join('assets/grass/', '1.png')  # Ensure you're using the correct file path and extension
+        if os.path.exists(img_path):
+            img = pygame.image.load(img_path).convert()  # Load the image and convert it for better performance
+            img = pygame.transform.scale(img, (50, 50))  # Scale the image to 16x16 pixels
+            grass_images.append(img)  # Append the scaled image to the list
+        else:
+            print(f"Error: {img_path} not found!")  # If the image doesn't exist, print an error
+        self.assets['grass'] = grass_images  # Store the scaled image under the 'grass' type
+
+# Tilemap class to manage and render the tiles
+class Tilemap:
+    def __init__(self, game, tile_size=16):
+        self.game = game
+        self.tile_size = tile_size
+        self.tilemap = {}
+        self.offgrid_tiles = []
 
 
-class Block(Object):
-    def __init__ (self, x, y, size):
-        super().__init__(x, y, size, size)
-        block = load_block(size)
-        self.image.blit(block, (0,0))
-        self.mask = pygame.mask.from_surface(self.image)
-
-def get_block(size):
-    path = join("assests", "Terrain", "Terrain.png")
-    image - pygame.image.load(path).conver_alpha()
-    surface = pygame.Surface((size, seize), pygame.SCRALPHA, 32)
-    rect = pygame.Rect(96, 0, size, size) # change these two values and size the two numbers are the chord of the starting pic
-    surface.blit(image, (0,0), rect) #1:04:38
-    return pygame.transform.scale2x(surface)
+        self.tilemap['-75;-75'] = {'type': 'grass', 'variant': 0, 'pos': (-75, -75)}
 
 
-  
-# Define the background colour 
-# using RGB color coding. 
-background_colour = (234, 212, 252) 
-  
-# Define the dimensions of 
-# screen object(width,height) 
-screen = pygame.display.set_mode((300, 300)) 
-  
-# Set the caption of the screen 
-pygame.display.set_caption('Geeksforgeeks') 
-  
-# Fill the background colour to the screen 
-screen.fill(background_colour) 
-  
-# Update the display using flip 
-pygame.display.flip() 
-  
-# Variable to keep our game loop running 
+        # Example tilemap generation with tiles placed at specific coordinates
+        for i in range(10):
+            self.tilemap[str(50 + 5*i) + ';75'] = {'type': 'grass', 'variant': 0, 'pos': (50 + 5*i, 1000)}
+            self.tilemap['10;' + str(1 + i)] = {'type': 'grass', 'variant': 0, 'pos': (10, 50 + 5*i)}
+
+    def render(self, surf):
+        # Render each tile from the tilemap
+        for loc in self.tilemap:
+            tile = self.tilemap[loc]
+            tile_image = self.game.assets[tile['type']][tile['variant']]  # Get the scaled tile image
+            surf.blit(tile_image, (tile['pos'][0] * self.tile_size, tile['pos'][1] * self.tile_size))
+
+        # Optionally, render any offgrid tiles if needed (not used here)
+        for tile in self.offgrid_tiles:
+            tile_image = self.game.assets[tile['type']][tile['variant']]
+            surf.blit(tile_image, tile['pos'])
+
+# Initialize pygame
+pygame.init()
+
+# Set up the screen and window
+background_colour = (234, 212, 252)
+screen = pygame.display.set_mode((1920, 1080))
+pygame.display.set_caption('Tilemap Example')
+
+# Initialize the game and load assets
+game = Game()
+tilemap = Tilemap(game, tile_size=16)
+
+# Game loop
 running = True
-  
-# game loop 
-while running: 
-    
-# for loop through the event queue   
-    for event in pygame.event.get(): 
-      
-        # Check for QUIT event       
-        if event.type == pygame.QUIT: 
+while running:
+    screen.fill(background_colour)  # Fill the screen with a background color
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
             running = False
+
+    # Render the tilemap on the screen
+    tilemap.render(screen)
+
+    # Update the display
+    pygame.display.flip()
+
+pygame.quit()
