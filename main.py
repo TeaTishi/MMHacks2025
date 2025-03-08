@@ -103,6 +103,11 @@ class Cat(object):
     def draw(self, screen):
         screen.blit(pygame.image.load("assets/cat/cat.png"), self.rect)
 
+        # img = pygame.image.load(img_path)
+        # img = pygame.transform.scale(img, (50, 50))
+        # img = img.convert()  # Convert the image for better performance
+        # self.assets['grass'] = [img]  # Store the image under the 'grass' key
+
         self.rect.x = self.x
         self.rect.y = self.y
 
@@ -143,8 +148,8 @@ class Game:
         # Path to the image
         img_path = 'assets/grass/1.png'
         if os.path.exists(img_path):
-            img = pygame.image.load(img_path)  # Load the image
-            img = pygame.transform.scale(img, (50, 50))  # Scale the image to 16x16
+            img = pygame.image.load(img_path)
+            img = pygame.transform.scale(img, (50, 50))
             img = img.convert()  # Convert the image for better performance
             self.assets['grass'] = [img]  # Store the image under the 'grass' key
         else:
