@@ -1,24 +1,24 @@
-import pygame
+import pygame 
 
 
-WIDTH = 1024
-HEIGHT = 800
-FPS = 60
+WIDTH = 1920
+HEIGHT = 1080
+background_colour = (234, 212, 252) 
+  
+screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
+  
+pygame.display.set_caption('M') 
+  
+screen.fill(background_colour) 
 
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.flip() 
 
-def main (window):
-    clock = pygame.time.Clock()
+def get_background(name):
+    image = pygame.image.load(join("assests", "Background", name))
 
-    run = True
-
-    while run:
-        clock.tick(FPS)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-                break
-
-    pygame.quit()
-    quit()
+def main(screen):
+    running = True
+    while running: 
+        for event in pygame.event.get():            
+            if event.type == pygame.QUIT: 
+                running = False
