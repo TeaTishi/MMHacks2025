@@ -1,109 +1,87 @@
-import pygame 
+import pygame
 
+
+class Player(pygame.sprite.Sprite):
+    COLOR = (255, 0, 0)
+
+    def __init__(self, x, y, width, height):
+        super().__init__()
+        self.image = pygame.Surface([width, height])
+        self.image.fill(self.COLOR)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.x_velocity = 0
+        self.y_velocity = 0
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
+
+class Enemy(object):
+    walkRight = [pygame.image.load('assets/rats/rightrat.png')]
+    walkLeft = [pygame.image.load('assets/rats/leftrat.png')]
+
+    def __init__(self, x, y, width, height, end):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.path = [x, end]
+        self.walkCount = 0
+        self.velocity = 3
+
+    def draw(self, screen):
+        self.move()
+        if self.walkCount + 1 >= 33:
+            self.walkCount = 0
+
+        if self.velocity > 0:
+            screen.blit(self.walkRight[0], (self.x, self.y))
+        else:
+            screen.blit(self.walkLeft[0], (self.x, self.y))
+
+    def move(self):
+        if self.velocity > 0:
+            if self.x + self.velocity < self.path[1]:
+                self.x += self.velocity
+            else:
+                self.velocity = self.velocity * -1
+        else:
+            if self.x + self.velocity > self.path[0]:
+                self.x += self.velocity
+            else:
+                self.velocity = self.velocity * -1
+
+
+pygame.init()
 
 WIDTH = 1920
 HEIGHT = 1080
-background_colour = (234, 212, 252) 
+background_colour = (234, 212, 252)
 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
 FPS = 60
-  
-screen = pygame.display.set_mode((WIDTH, HEIGHT)) 
-  
-pygame.display.set_caption('M') 
-  
-screen.fill(background_colour) 
 
-pygame.display.flip() 
+player = Player(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT)
+rat = Enemy(100, 100, 100, 100, 1000)
 
-# def get_background(name):
-    # image = pygame.image.load(join("assests", name))
+def redrawGameWindow():
+    screen.fill(background_colour)
+    player.draw(screen)
+    rat.draw(screen)
+    pygame.display.update()
 
-def main(screen):
+running = True
+while running:
+    clock.tick(FPS)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
 
+    redrawGameWindow()
 
-
-    running = True
-    while running: 
-        for event in pygame.event.get():            
-            if event.type == pygame.QUIT: 
-                running = False
-
-
-# def main (window):
-#     clock = pygame.time.Clock()
-#     background, bg_image = get_background("background.jpg")
-    
-#     player = Player (100,100,50,50)
-
-#     run = True
-#     while run:
-#         clock.tick(FPS)
-
-#         for event in pygame.event.get():
-#             if event.type == pygame.QUIT:
-#                 run = False
-#                 break
-#         draw(window, background, bg_image, player)
-
-#     pygame.quit()
-#     quit()
-
-# if __name__ == "__main__":
-#     main(window)
-
-
-
-# player.py
-# import pygame
-
-# class Player(pygame.sprite.Sprite):
-#     COLOR = (255, 0, 0)
-    
-#     def __init__(self, x, y, width, height):
-#         super().__init__()
-#         self.image = pygame.Surface([width, height])
-#         self.image.fill(self.COLOR)
-#         self.rect = self.image.get_rect()
-#         self.rect.x = x
-#         self.rect.y = y
-#         self.x_velocity = 0
-#         self.y_velocity = 0
-
-#     def draw(self, screen):
-#         screen.blit(self.image, self.rect)
-
-# game.py
-import pygame
-from player import Player
-
-def main():
-    pygame.init()
-
-    WIDTH = 1920
-    HEIGHT = 1080
-    background_colour = (234, 212, 252)
-    FPS = 60
-
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption('My Game')
-
-    clock = pygame.time.Clock()
-    player = Player(50, 50, 50, 50)  # Creating an instance of Player
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        screen.fill(background_colour)
-        player.draw(screen)  # Draw the player on the screen
-
-        pygame.display.flip()
-        clock.tick(FPS)
-
-    pygame.quit()
-
-if __name__ == '__main__':
-    main()
-
+pygame.quit()
