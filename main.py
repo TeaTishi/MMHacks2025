@@ -16,9 +16,8 @@ pygame.display.flip()
 def get_background(name):
     image = pygame.image.load(join("assests", "Background", name))
 
-def main(screen):
-    running = True
-    while running: 
-        for event in pygame.event.get():            
-            if event.type == pygame.QUIT: 
-                running = False
+running = True
+while running: 
+    for event in pygame.event.get():            
+        if event.type == pygame.QUIT: 
+            running = False
