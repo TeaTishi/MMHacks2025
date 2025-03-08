@@ -35,21 +35,43 @@
 #     def draw(self, win):
 #         pygame.draw.rect(win, self.COLOR, self.rect)
 
+
+# import pygame
+
+
+# class Player:
+#     def __init__ (self, game, e_type, pos, size):
+#         self.game = game
+#         self.type = e_type
+#         self.pos - list(pos)
+#         self.size = size
+#         self.velocity = [0,0]
+
+#     def update(self, movement = (0,0)):
+#         frame_movement = (movement[0] + self.velocity[0], movement[1] + self.velocity[1])
+#         self.pos[0] += frame_movement[0]
+#         self.pos[1] += frame_movement[1]
+
+#     def render (self, surf):
+#         surf.blit(self.game.assets["player"], self.pos)
+
+
+
+# player.py
 import pygame
 
+class Player(pygame.sprite.Sprite):
+    COLOR = (255, 0, 0)
+    
+    def __init__(self, x, y, width, height):
+        super().__init__()
+        self.image = pygame.Surface([width, height])
+        self.image.fill(self.COLOR)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.x_velocity = 0
+        self.y_velocity = 0
 
-class Player:
-    def __init__ (self, game, e_type, pos, size):
-        self.game = game
-        self.type = e_type
-        self.pos - list(pos)
-        self.size = size
-        self.velocity = [0,0]
-
-    def update(self, movement = (0,0)):
-        frame_movement = (movement[0] + self.velocity[0], movement[1] + self.velocity[1])
-        self.pos[0] += frame_movement[0]
-        self.pos[1] += frame_movement[1]
-
-    def render (self, surf):
-        surf.blit(self.game.assets["player"], self.pos)
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
