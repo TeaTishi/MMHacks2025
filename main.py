@@ -29,6 +29,7 @@ def main(screen):
                 running = False
 
 
+
 # def main (window):
 #     clock = pygame.time.Clock()
 #     background, bg_image = get_background("background.jpg")
