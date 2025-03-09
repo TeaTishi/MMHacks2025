@@ -6,7 +6,7 @@ import os
 from testing import scroll_threshold
 
 WIDTH = 1920
-HEIGHT = 1080
+HEIGHT = 108
 FPS = 60
 
 class Player(pygame.sprite.Sprite):
