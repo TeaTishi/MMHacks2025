@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity += self.gravity
         self.rect.y += self.y_velocity
 
-        self.tileCollisions(tilemap)
+        self.tileCollisions(tilemap, scroll_offset)
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -52,19 +52,19 @@ class Player(pygame.sprite.Sprite):
             self.y_velocity = self.jumppower
             self.onground = False
 
-    def tileCollisions(self, tilemap):
+    def tileCollisions(self, tilemap, scroll_offset):
         self.onground = False
         for loc in tilemap.tilemap:
             tile = tilemap.tilemap[loc]
             tile_rect = pygame.Rect(
                 tile['pos'][0] * tilemap.tile_size,
-                tile['pos'][1] * tilemap.tile_size,
+                (tile['pos'][1] * tilemap.tile_size) - scroll_offset,  # Adjust Y position with scroll_offset
                 tilemap.tile_size,
                 tilemap.tile_size
             )
 
             if self.rect.colliderect(tile_rect):
-                if self.y_velocity > 0:
+                if self.y_velocity > 0:  # Falling
                     self.rect.bottom = tile_rect.top
                     self.y_velocity = 0
                     self.onground = True
@@ -215,7 +215,7 @@ tilemap = Tilemap(game, tile_size=50)
 
 # Scrolling variables
 scroll_offset = 0
-scroll_threshold = 200  # Define a threshold for scrolling
+scroll_threshold = HEIGHT /2.5 # Define a threshold for scrolling
 
 def redrawGameWindow():
     screen.fill((0, 0, 0))  # Clear the screen
@@ -255,7 +255,7 @@ while running:
 
     # Scroll background when player drops past a certain threshold
     if player.rect.bottom > HEIGHT - scroll_threshold:
-        scroll_offset += 5  # Adjust the scrolling speed
+        scroll_offset += 10  # Adjust the scrolling speed
 
     # Check collisions
     if check_collision(player, rat):
