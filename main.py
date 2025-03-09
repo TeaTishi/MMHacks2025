@@ -1,5 +1,9 @@
+import sys
+
 import pygame
 import os
+
+#from MMHacks2025.testing import scroll_threshold
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -219,6 +223,11 @@ background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('M')
 
+
+def get_font(size):
+    return pygame.font.SysFont('Arial', size)
+
+
 clock = pygame.time.Clock()
 font = pygame.font.Font(None, 74)
 
@@ -268,12 +277,23 @@ def redrawGameWindow():
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
 
+def check_collision (player, cat):
+    return player.rect.colliderect(cat.rect)
+
+
 running = True
 while running:
     clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    # Draw the background image
+    screen.blit(background_colour, (0,0))
+
+    # Update the display
+    #pygame.display.flip()
+
 
     # Handle player input
     keys = pygame.key.get_pressed()
@@ -296,5 +316,9 @@ while running:
     # Check collisions
     if check_collision(player, rat):
         player.get_damage()
+        print("you lose!")
+
+    if check_collision(player, cat):
+        print("you win!")
 
     redrawGameWindow()
