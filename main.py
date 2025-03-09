@@ -1,4 +1,5 @@
 import sys
+
 import pygame
 import os
 
@@ -353,5 +354,3 @@ def createGame():
 
 #pygame.init()
 createGame()
-message.txt
-13 KB
