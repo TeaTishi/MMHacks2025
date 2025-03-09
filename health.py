@@ -184,7 +184,7 @@ pygame.init()
 WIDTH = 1920
 HEIGHT = 1080
 #background_colour = (234, 212, 252)
-background_colour = pygame.image.load('assets/background.jpg')
+background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
