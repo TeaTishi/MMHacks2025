@@ -126,8 +126,8 @@ health_display = Health(
     max_health=3,
     heart_filled_path="assets/heart/filledHeart.png",
     heart_unfilled_path="assets/heart/emptyHeart.png",
-    x=10,
-    y=10,
+    x=100,
+    y=100,
     spacing=5,
     size=(30, 30)
 )

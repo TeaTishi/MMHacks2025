@@ -114,9 +114,9 @@ class Tilemap:
         self.offgrid_tiles = []
 
         # Example tilemap generation with tiles placed at specific coordinates
-        for i in range(10):
-            self.tilemap[str(3 + i) + ';10'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 10)}
-            self.tilemap['10;' + str(5 + i)] = {'type': 'grass', 'variant': 0, 'pos': (10, 5 + i)}
+        for i in range(28):
+            self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
+            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
 
     def render(self, surf):
         # Render each tile from the tilemap
@@ -149,9 +149,6 @@ class Game:
             self.assets['grass'] = [img]  # Store the image under the 'grass' key
         else:
             print(f"Error: {img_path} not found!")  # Print error if image is missing
-
-
-
 
 
 pygame.init()

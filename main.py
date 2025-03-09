@@ -1,5 +1,6 @@
 import pygame
 import os
+
 #from MMHacks2025.enemies import background_colour
 
 
@@ -100,7 +101,12 @@ class Cat(object):
         self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, screen):
-        screen.blit(pygame.image.load("assets/cat/cat2.png"), self.rect)
+        screen.blit(pygame.image.load("assets/cat/cat.png"), self.rect)
+
+        # img = pygame.image.load(img_path)
+        # img = pygame.transform.scale(img, (50, 50))
+        # img = img.convert()  # Convert the image for better performance
+        # self.assets['grass'] = [img]  # Store the image under the 'grass' key
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -115,7 +121,7 @@ class Tilemap:
         # Example tilemap generation with tiles placed at specific coordinates
         for i in range(28):
             self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
-            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
+            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)} 
 
     def render(self, surf):
         # Render each tile from the tilemap
@@ -142,8 +148,8 @@ class Game:
         # Path to the image
         img_path = 'assets/grass/1.png'
         if os.path.exists(img_path):
-            img = pygame.image.load(img_path)  # Load the image
-            img = pygame.transform.scale(img, (50, 50))  # Scale the image to 16x16
+            img = pygame.image.load(img_path)
+            img = pygame.transform.scale(img, (50, 50))
             img = img.convert()  # Convert the image for better performance
             self.assets['grass'] = [img]  # Store the image under the 'grass' key
         else:
