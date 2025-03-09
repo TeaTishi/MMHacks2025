@@ -16,8 +16,10 @@ class Player(pygame.sprite.Sprite):
         self.x_velocity = 0
         self.y_velocity = 0
         self.speed = 10
-        self.gravity = 8
-        self.jumppower = -100
+        self.gravity = 3
+        self.jumppower = -30
+        self.gravity = 3
+        self.jumppower = -30
         self.onground = True
         self.health = 3
         self.max_health = 3
@@ -33,7 +35,7 @@ class Player(pygame.sprite.Sprite):
         if self.health > self.max_health:
             self.health -= 1
 
-    def update(self):
+    def update(self,tilemap):
         self.rect.x += self.x_velocity
 
         self.y_velocity += self.gravity
@@ -41,12 +43,12 @@ class Player(pygame.sprite.Sprite):
 
         self.tileCollisions(tilemap)
         
-        if self.rect.bottom >= HEIGHT:
-            self.rect.bottom = HEIGHT
-            self.y_velocity = 0
-            self.on_ground = True
-        else:
-            self.on_ground = False
+        # if self.rect.bottom >= HEIGHT:
+        #     self.rect.bottom = HEIGHT
+        #     self.y_velocity = 0
+        #     self.on_ground = True
+        # else:
+        #     self.on_ground = False
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -58,6 +60,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT
 
     def jump(self):
+        print("jump initialized")
+        print(self.on_ground)
         if self.on_ground:
             self.y_velocity = self.jumppower
             self.on_ground = False
@@ -79,9 +83,9 @@ class Player(pygame.sprite.Sprite):
                     self.rect.bottom = tile_rect.top
                     self.y_velocity = 0
                     self.on_ground = True
-                elif self.y_velocity < 0:
-                    self.rect.top = tile_rect.bottom
-                    self.y_velocity = 0
+                # elif self.y_velocity < 0:
+                #     self.rect.top = tile_rect.bottom
+                #     self.y_velocity = 0
 
 
 
@@ -278,7 +282,7 @@ while running:
     if keys[pygame.K_w]:
         player.jump()
 
-    player.update()
+    player.update(tilemap)
 
     if check_collision(player, rat):
         player.get_damage()
