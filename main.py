@@ -118,9 +118,9 @@ class Tilemap:
         self.offgrid_tiles = []
 
         # Example tilemap generation with tiles placed at specific coordinates
-        for i in range(10):
-            self.tilemap[str(3 + i) + ';10'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 10)}
-            self.tilemap['10;' + str(5 + i)] = {'type': 'grass', 'variant': 0, 'pos': (10, 5 + i)}
+        for i in range(28):
+            self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
+            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)} 
 
     def render(self, surf):
         # Render each tile from the tilemap
@@ -131,7 +131,7 @@ class Tilemap:
             y_pos = tile['pos'][1] * self.tile_size  # Y coordinate of the tile
 
             # Render the tile on the screen
-            surf.blit(tile_image, (x_pos, y_pos))
+            surf.blit(tile_image, (x_pos, y_pos)) 
 
         # Optionally render any offgrid tiles if needed
         for tile in self.offgrid_tiles:
@@ -154,13 +154,36 @@ class Game:
         else:
             print(f"Error: {img_path} not found!")  # Print error if image is missing
 
+class Sound:
+    def __init__(self, music_path, volume=0.5):
+        pygame.mixer.init()
+
+        self.music_path = music_path
+        self.volume = volume
+        self.load_music()
+
+    def load_music(self):
+        pygame.mixer.music.load(self.music_path)
+        pygame.mixer.music.set_volume(self.volume)
+
+    def play_music(self, loops=-1):
+        pygame.mixer.music.play(loops)
+
+    def stop_music(self):
+        pygame.mixer.music.stop()
+
+    def play_sound_effect(self, sound_path, volume=0.5):
+        sound = pygame.mixer.Sound(sound_path)
+        sound.set_volume(volume)
+        sound.play()
+
 
 pygame.init()
 
 WIDTH = 1920
 HEIGHT = 1080
 #background_colour = (234, 212, 252)
-background_colour = pygame.image.load('assets/background.jpg')
+background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -179,6 +202,9 @@ FPS = 60
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(100, 100, 100, 100, 1000)
 cat= Cat(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT, 1000)
+
+sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
+sound.play_music()
 
 game = Game() 
 
