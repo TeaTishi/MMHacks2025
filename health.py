@@ -18,6 +18,8 @@ class Player(pygame.sprite.Sprite):
         self.speed = 10
         self.gravity = 3
         self.jumppower = -30
+        self.gravity = 3
+        self.jumppower = -30
         self.onground = True
         self.health = 3
         self.max_health = 3
