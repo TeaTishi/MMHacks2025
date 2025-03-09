@@ -3,7 +3,6 @@ import os
 
 #from MMHacks2025.enemies import background_colour
 
-
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -16,8 +15,12 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.x_velocity = 0
         self.y_velocity = 0
-        self.speed = 5
-
+        self.speed = 10
+        self.gravity = 3
+        self.jumppower = -30
+        self.gravity = 3
+        self.jumppower = -30
+        self.onground = True
         self.health = 3
         self.max_health = 3
 
@@ -32,9 +35,25 @@ class Player(pygame.sprite.Sprite):
         if self.health > self.max_health:
             self.health -= 1
 
-    def update(self):
+    def update(self,tilemap):
         self.rect.x += self.x_velocity
+
+        self.y_velocity += self.gravity
         self.rect.y += self.y_velocity
+
+        self.tileCollisions(tilemap)
+        
+        # if self.rect.bottom >= HEIGHT:
+        #     self.rect.bottom = HEIGHT
+        #     self.y_velocity = 0
+        #     self.on_ground = True
+        # else:
+        #     self.on_ground = False
+
+        # if self.rect.left < 0:
+        #     self.rect.left = 0
+        # if self.rect.right > WIDTH:
+        #     self.rect.right = WIDTH
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -44,6 +63,32 @@ class Player(pygame.sprite.Sprite):
             self.rect.top = 0
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
+
+    def jump(self):
+        if self.on_ground:
+            self.y_velocity = self.jumppower
+            self.on_ground = False
+
+    def tileCollisions(self, tilemap):
+        self.on_ground = False
+
+        for loc in tilemap.tilemap:
+            tile = tilemap.tilemap[loc]
+            tile_rect = pygame.Rect(
+                tile['pos'][0] * tilemap.tile_size,
+                tile['pos'][1] * tilemap.tile_size,
+                tilemap.tile_size,
+                tilemap.tile_size
+            )
+
+            if self.rect.colliderect(tile_rect):
+                if self.y_velocity > 0:
+                    self.rect.bottom = tile_rect.top
+                    self.y_velocity = 0
+                    self.on_ground = True
+                # elif self.y_velocity < 0:
+                #     self.rect.top = tile_rect.bottom
+                #     self.y_velocity = 0
 
 
 
@@ -194,7 +239,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(100, 100, 100, 100, 1000)
+rat = Enemy(100, 300, 100, 100, 1000)
 cat= Cat(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT, 1000)
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
@@ -238,13 +283,9 @@ while running:
         player.x_velocity = 0
 
     if keys[pygame.K_w]:
-        player.y_velocity = -player.speed
-    elif keys[pygame.K_s]:
-        player.y_velocity = player.speed
-    else:
-        player.y_velocity = 0
+        player.jump()
 
-    player.update()
+    player.update(tilemap)
 
     if check_collision(player, rat):
         player.get_damage()
