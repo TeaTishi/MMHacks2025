@@ -229,7 +229,7 @@ def get_font(size):
 
 
 clock = pygame.time.Clock()
-FPS = 60
+font = pygame.font.Font(None, 74)
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(100, 100, 100, 100, 1000)
@@ -263,6 +263,14 @@ def redrawGameWindow():
         screen.blit(game.assets['filled_heart'], (heart_x + i * 40, heart_y))  # Draw filled hearts
     for i in range(player.max_health - player.health):
         screen.blit(game.assets['empty_heart'], (heart_x + (player.health + i) * 40, heart_y))  # Draw empty hearts
+
+    elapsed_time = pygame.time.get_ticks() // 1000
+    minutes = elapsed_time // 60
+    seconds = elapsed_time % 60
+    timer_text = f"{minutes:02}:{seconds:02}"
+    timer_surface = font.render(timer_text, True, (255, 255, 255))
+    screen.blit(timer_surface, (WIDTH - 200, 20))
+    pygame.display.update()
 
     pygame.display.update()
 
