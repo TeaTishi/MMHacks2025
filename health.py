@@ -23,9 +23,12 @@ class Player(pygame.sprite.Sprite):
         self.onground = True
         self.health = 3
         self.max_health = 3
+        self.scale_factor = 2
 
     def draw(self, screen):
-        screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
+        player_image = pygame.image.load("assets/player/player.png")
+        player_image = pygame.transform.scale(player_image, (self.rect.width * self.scale_factor, self.rect.height * self.scale_factor))
+        screen.blit(player_image, self.rect)
 
     def get_damage(self):
         if self.health > 0:
@@ -69,11 +72,24 @@ class Player(pygame.sprite.Sprite):
                 tilemap.tile_size
             )
 
-            if self.rect.colliderect(tile_rect):
+            scaled_rect = pygame.Rect(
+                self.rect.x,
+                self.rect.y,
+                self.rect.width * self.scale_factor,
+                self.rect.height * self.scale_factor
+            )
+
+            if scaled_rect.colliderect(tile_rect):
                 if self.y_velocity > 0:
                     self.rect.bottom = tile_rect.top
                     self.y_velocity = 0
                     self.onground = True
+
+            # if self.rect.colliderect(tile_rect):
+            #     if self.y_velocity > 0:
+            #         self.rect.bottom = tile_rect.top
+            #         self.y_velocity = 0
+            #         self.onground = True
 
 
 class Enemy(object):
