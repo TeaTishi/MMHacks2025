@@ -215,35 +215,8 @@ class Sound:
         sound.play()
 
 
-pygame.init()
-
-background_colour = pygame.image.load('assets/background.png')
-background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('M')
-
-
 def get_font(size):
     return pygame.font.SysFont('Arial', size)
-
-
-clock = pygame.time.Clock()
-font = pygame.font.Font(None, 74)
-
-player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(100, 100, 100, 100, 1000)
-cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
-
-sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
-sound.play_music()
-
-game = Game()
-tilemap = Tilemap(game, tile_size=50)
-
-# Scrolling variables
-scroll_offset = 0
-scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
 
 def redrawGameWindow():
     screen.fill((0, 0, 0))  # Clear the screen
@@ -281,6 +254,31 @@ def check_collision (player, cat):
     return player.rect.colliderect(cat.rect)
 
 
+pygame.init()
+
+background_colour = pygame.image.load('assets/background.png')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 74)
+
+player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
+rat = Enemy(100, 100, 100, 100, 1000)
+cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
+
+sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
+sound.play_music()
+
+game = Game()
+tilemap = Tilemap(game, tile_size=50)
+
+# Scrolling variables
+scroll_offset = 0
+scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
+
 running = True
 while running:
     clock.tick(FPS)
@@ -293,7 +291,6 @@ while running:
 
     # Update the display
     #pygame.display.flip()
-
 
     # Handle player input
     keys = pygame.key.get_pressed()
