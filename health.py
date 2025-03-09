@@ -1,9 +1,106 @@
+import sys
+
 import pygame
 import os
+
+from testing import scroll_threshold
 
 WIDTH = 1920
 HEIGHT = 1080
 FPS = 60
+
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 74)
+
+background_colour = pygame.image.load('assets/background.png')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+
+class Button():
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+        self.image = image
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.font = font
+        self.base_color, self.hovering_color = base_color, hovering_color
+        self.text_input = text_input
+        self.text = self.font.render(self.text_input, True, self.base_color)
+        if self.image is None:
+            self.image = self.text
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+    def update(self, screen):
+        if self.image is not None:
+            screen.blit(self.image, self.rect)
+        screen.blit(self.text, self.text_rect)
+
+    def checkForInput(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+        return False
+
+    def changeColor(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
+
+# Function to create the main menu
+def main_menu():
+    while True:
+        screen.blit(background_colour, (0, 0))
+
+        # Mouse position
+        menu_mouse_pos = pygame.mouse.get_pos()
+
+        # Title text
+        title_text = font.render("MAIN MENU", True, (255, 255, 255))
+        title_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+        screen.blit(title_text, title_rect)
+
+        # Play button
+        play_button = Button(
+            image=None,
+            pos=(WIDTH // 2, HEIGHT // 2),
+            text_input="PLAY",
+            font=font,
+            base_color=(255, 255, 255),
+            hovering_color=(0, 255, 0)
+        )
+
+        # Quit button
+        quit_button = Button(
+            image=None,
+            pos=(WIDTH // 2, HEIGHT // 2 + 100),
+            text_input="QUIT",
+            font=font,
+            base_color=(255, 255, 255),
+            hovering_color=(255, 0, 0)
+        )
+
+        # Update buttons
+        for button in [play_button, quit_button]:
+            button.changeColor(menu_mouse_pos)
+            button.update(screen)
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if play_button.checkForInput(menu_mouse_pos):
+                    return  # Exit the main menu and start the game
+                if quit_button.checkForInput(menu_mouse_pos):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
 
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
@@ -23,12 +120,14 @@ class Player(pygame.sprite.Sprite):
         self.onground = True
         self.health = 3
         self.max_health = 3
-        self.scale_factor = 2
 
     def draw(self, screen):
-        player_image = pygame.image.load("assets/player/player.png")
-        player_image = pygame.transform.scale(player_image, (self.rect.width * self.scale_factor, self.rect.height * self.scale_factor))
-        screen.blit(player_image, self.rect)
+        if self.x_velocity > 0:
+            print(self.x_velocity)
+            screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
+        elif self.x_velocity < 0:
+            print(self.x_velocity)
+            screen.blit(pygame.image.load("assets/player/playerLeft.png"), self.rect)
 
     def get_damage(self):
         if self.health > 0:
@@ -72,24 +171,11 @@ class Player(pygame.sprite.Sprite):
                 tilemap.tile_size
             )
 
-            scaled_rect = pygame.Rect(
-                self.rect.x,
-                self.rect.y,
-                self.rect.width * self.scale_factor,
-                self.rect.height * self.scale_factor
-            )
-
-            if scaled_rect.colliderect(tile_rect):
+            if self.rect.colliderect(tile_rect):
                 if self.y_velocity > 0:
                     self.rect.bottom = tile_rect.top
                     self.y_velocity = 0
                     self.onground = True
-
-            # if self.rect.colliderect(tile_rect):
-            #     if self.y_velocity > 0:
-            #         self.rect.bottom = tile_rect.top
-            #         self.y_velocity = 0
-            #         self.onground = True
 
 
 class Enemy(object):
@@ -156,9 +242,41 @@ class Tilemap:
         self.offgrid_tiles = []
 
         # Example tilemap generation with tiles placed at specific coordinates
+        self.tilemap['16;10'] = {'type': 'grass', 'variant': 0, 'pos': (16, 10)}
+        self.tilemap['14;9'] = {'type': 'grass', 'variant': 0, 'pos': (14, 9)}
+        self.tilemap['12;8'] = {'type': 'grass', 'variant': 0, 'pos': (12, 8)}
+        self.tilemap['10;7'] = {'type': 'grass', 'variant': 0, 'pos': (10, 7)}
+        self.tilemap['8;6'] = {'type': 'grass', 'variant': 0, 'pos': (8, 6)}
+
+
         for i in range(28):
-            self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
             self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
+            self.tilemap[str(i) + ';21'] = {'type': 'grass', 'variant': 0, 'pos': (i, 21)}
+            self.tilemap[str(7 + i) + ';28'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 28)}
+
+        for i in range(9):
+            self.tilemap['7;' + str(5+i)] = {'type': 'grass', 'variant': 0, 'pos': (7, 5+i)}
+
+        for i in range(4):
+            self.tilemap[str(18+i) + ';11'] = {'type': 'grass', 'variant': 0, 'pos': (18+i, 11)}
+            
+
+        for i in range(60):
+            self.tilemap['1;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (1, i)}
+            self.tilemap['34;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (34, i)}
+
+            self.tilemap['2;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (2, i)}
+            self.tilemap['35;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (35, i)}
+
+            self.tilemap['3;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (3, i)}
+            self.tilemap['36;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (36, i)}
+
+            self.tilemap['4;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (4, i)}
+            self.tilemap['33;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (33, i)}
+
+        for i in range(36):
+            self.tilemap[str(i) + ';60'] = {'type': 'grass', 'variant': 0, 'pos': (i, 60)}
+
 
     def render(self, surf, scroll_offset):  # Added scroll_offset here
         # Render each tile from the tilemap
@@ -227,90 +345,103 @@ class Sound:
         sound.play()
 
 
-pygame.init()
-
-background_colour = pygame.image.load('assets/background.png')
-background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('M')
-
-clock = pygame.time.Clock()
-font = pygame.font.Font(None, 74)
-
-player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(100, 100, 100, 100, 1000)
-cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
-
-sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
-sound.play_music()
-
-game = Game()
-tilemap = Tilemap(game, tile_size=50)
-
-# Scrolling variables
-scroll_offset = 0
-scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
-
-def redrawGameWindow():
-    screen.fill((0, 0, 0))  # Clear the screen
-    screen.blit(background_colour, (0, scroll_offset))  # Background scroll
-    screen.blit(background_colour, (0, scroll_offset - HEIGHT))  # Continuous background scroll
-    tilemap.render(screen, scroll_offset)  # Render tiles with scroll
-
-    player.draw(screen)
-    rat.draw(screen)
-    cat.draw(screen)  # Draw the cat
-
-    # Draw hearts (player's health) in the top-left corner
-    heart_x = 250  # X position for the first heart
-    heart_y = 150  # Y position for the hearts
-
-    for i in range(player.health):
-        screen.blit(game.assets['filled_heart'], (heart_x + i * 40, heart_y))  # Draw filled hearts
-    for i in range(player.max_health - player.health):
-        screen.blit(game.assets['empty_heart'], (heart_x + (player.health + i) * 40, heart_y))  # Draw empty hearts
-
-    elapsed_time = pygame.time.get_ticks() // 1000
-    minutes = elapsed_time // 60
-    seconds = elapsed_time % 60
-    timer_text = f"{minutes:02}:{seconds:02}"
-    timer_surface = font.render(timer_text, True, (255, 255, 255))
-    screen.blit(timer_surface, (WIDTH - 200, -500))
-    pygame.display.update()
-
-    pygame.display.update()
+def get_font(size):
+    return pygame.font.SysFont('Arial', size)
 
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
 
-running = True
-while running:
-    clock.tick(FPS)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+def check_collision (player, cat):
+    return player.rect.colliderect(cat.rect)
 
-    # Handle player input
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_a]:
-        player.x_velocity = -player.speed
-    elif keys[pygame.K_d]:
-        player.x_velocity = player.speed
-    else:
-        player.x_velocity = 0
+def createGame():
+    def redrawGameWindow():
+        screen.fill((0, 0, 0))  # Clear the screen
+        screen.blit(background_colour, (0, -scroll_offset))  # Background scroll
+        screen.blit(background_colour, (0, -scroll_offset + HEIGHT))  # Continuous background scroll
+        tilemap.render(screen, scroll_offset)  # Render tiles with scroll
 
-    if keys[pygame.K_w]:
-        player.jump()
+        player.draw(screen)
+        rat.draw(screen)
+        cat.draw(screen)  # Draw the cat
 
-    player.update(tilemap)
+        # Draw hearts (player's health) in the top-left corner
+        heart_x = 250  # X position for the first heart
+        heart_y = 150  # Y position for the hearts
 
-    # Scroll background when player drops past a certain threshold
-    if player.rect.bottom > HEIGHT - scroll_threshold:
-        scroll_offset += 10  # Adjust the scrolling speed
+        for i in range(player.health):
+            screen.blit(game.assets['filled_heart'], (heart_x + i * 40, heart_y))  # Draw filled hearts
+        for i in range(player.max_health - player.health):
+            screen.blit(game.assets['empty_heart'], (heart_x + (player.health + i) * 40, heart_y))  # Draw empty hearts
 
-    # Check collisions
-    if check_collision(player, rat):
-        player.get_damage()
+        elapsed_time = pygame.time.get_ticks() // 1000
+        minutes = elapsed_time // 60
+        seconds = elapsed_time % 60
+        timer_text = f"{minutes:02}:{seconds:02}"
+        timer_surface = font.render(timer_text, True, (255, 255, 255))
+        screen.blit(timer_surface, (WIDTH - 200, 20))
+        pygame.display.update()
 
-    redrawGameWindow()
+
+
+    background_colour = pygame.image.load('assets/background.png')
+    background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+    player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
+    rat = Enemy(100, 100, 100, 100, 1000)
+    cat = Cat(WIDTH / 2, HEIGHT, 100, 100, 1000)  # Create cat instance
+
+    sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
+    sound.play_music()
+
+    game = Game()
+    tilemap = Tilemap(game, tile_size=50)
+
+    # Scrolling variables
+    scroll_offset = 0
+    scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
+
+    running = True
+    while running:
+        clock.tick(FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Draw the background image
+        screen.blit(background_colour, (0, 0))
+
+        # Update the display
+        # pygame.display.flip()
+
+        # Handle player input
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            player.x_velocity = -player.speed
+        elif keys[pygame.K_d]:
+            player.x_velocity = player.speed
+        else:
+            player.x_velocity = 0
+
+        if keys[pygame.K_w]:
+            player.jump()
+
+        player.update(tilemap)
+
+        # Scroll background when player drops past a certain threshold
+        if player.rect.bottom > HEIGHT - scroll_threshold:
+            scroll_offset += 10  # Adjust the scrolling speed
+
+        # Check collisions
+        if check_collision(player, rat):
+            player.get_damage()
+            print("you lose!")
+
+        if check_collision(player, cat):
+            print("you win!")
+
+        redrawGameWindow()
+
+#pygame.init()
+main_menu()
+createGame()
