@@ -50,6 +50,11 @@ class Player(pygame.sprite.Sprite):
         # else:
         #     self.on_ground = False
 
+        # if self.rect.left < 0:
+        #     self.rect.left = 0
+        # if self.rect.right > WIDTH:
+        #     self.rect.right = WIDTH
+
         if self.rect.left < 0:
             self.rect.left = 0
         if self.rect.right > WIDTH:
@@ -60,8 +65,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT
 
     def jump(self):
-        print("jump initialized")
-        print(self.on_ground)
         if self.on_ground:
             self.y_velocity = self.jumppower
             self.on_ground = False
@@ -236,7 +239,7 @@ clock = pygame.time.Clock()
 FPS = 60
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(100, 100, 100, 100, 1000)
+rat = Enemy(100, 300, 100, 100, 1000)
 cat= Cat(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT, 1000)
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
