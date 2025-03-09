@@ -276,7 +276,7 @@ def redrawGameWindow():
     seconds = elapsed_time % 60
     timer_text = f"{minutes:02}:{seconds:02}"
     timer_surface = font.render(timer_text, True, (255, 255, 255))
-    screen.blit(timer_surface, (WIDTH - 200, 20))
+    screen.blit(timer_surface, (WIDTH - 200, -500))
     pygame.display.update()
 
     pygame.display.update()
