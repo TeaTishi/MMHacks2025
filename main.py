@@ -218,35 +218,6 @@ class Sound:
 def get_font(size):
     return pygame.font.SysFont('Arial', size)
 
-# def redrawGameWindow():
-#     screen.fill((0, 0, 0))  # Clear the screen
-#     screen.blit(background_colour, (0, scroll_offset))  # Background scroll
-#     screen.blit(background_colour, (0, scroll_offset - HEIGHT))  # Continuous background scroll
-#     tilemap.render(screen, scroll_offset)  # Render tiles with scroll
-#
-#     player.draw(screen)
-#     rat.draw(screen)
-#     cat.draw(screen)  # Draw the cat
-#
-#     # Draw hearts (player's health) in the top-left corner
-#     heart_x = 250  # X position for the first heart
-#     heart_y = 150  # Y position for the hearts
-#
-#     for i in range(player.health):
-#         screen.blit(game.assets['filled_heart'], (heart_x + i * 40, heart_y))  # Draw filled hearts
-#     for i in range(player.max_health - player.health):
-#         screen.blit(game.assets['empty_heart'], (heart_x + (player.health + i) * 40, heart_y))  # Draw empty hearts
-#
-#     elapsed_time = pygame.time.get_ticks() // 1000
-#     minutes = elapsed_time // 60
-#     seconds = elapsed_time % 60
-#     timer_text = f"{minutes:02}:{seconds:02}"
-#     timer_surface = font.render(timer_text, True, (255, 255, 255))
-#     screen.blit(timer_surface, (WIDTH - 200, 20))
-#     pygame.display.update()
-#
-#     pygame.display.update()
-
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
 
@@ -351,67 +322,3 @@ def createGame():
 
 pygame.init()
 createGame()
-#
-# background_colour = pygame.image.load('assets/background.png')
-# background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
-#
-# screen = pygame.display.set_mode((WIDTH, HEIGHT))
-# pygame.display.set_caption('M')
-#
-# clock = pygame.time.Clock()
-# font = pygame.font.Font(None, 74)
-#
-# player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-# rat = Enemy(100, 100, 100, 100, 1000)
-# cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
-#
-# sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
-# sound.play_music()
-#
-# game = Game()
-# tilemap = Tilemap(game, tile_size=50)
-#
-# # Scrolling variables
-# scroll_offset = 0
-# scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
-#
-# running = True
-# while running:
-#     clock.tick(FPS)
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             running = False
-#
-#     # Draw the background image
-#     screen.blit(background_colour, (0,0))
-#
-#     # Update the display
-#     #pygame.display.flip()
-#
-#     # Handle player input
-#     keys = pygame.key.get_pressed()
-#     if keys[pygame.K_a]:
-#         player.x_velocity = -player.speed
-#     elif keys[pygame.K_d]:
-#         player.x_velocity = player.speed
-#     else:
-#         player.x_velocity = 0
-#
-#     if keys[pygame.K_w]:
-#         player.jump()
-#
-#     player.update(tilemap)
-#
-#     # Scroll background when player drops past a certain threshold
-#     if player.rect.bottom > HEIGHT - scroll_threshold:
-#         scroll_offset += 10  # Adjust the scrolling speed
-#
-#     # Check collisions
-#     if check_collision(player, rat):
-#         player.get_damage()
-#         print("you lose!")
-#
-#     if check_collision(player, cat):
-#         print("you win!")
-#
-#     redrawGameWindow()
