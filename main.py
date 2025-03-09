@@ -352,5 +352,5 @@ def createGame():
 
         redrawGameWindow()
 
-pygame.init()
+#pygame.init()
 createGame()
