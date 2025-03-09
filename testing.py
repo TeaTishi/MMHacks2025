@@ -480,6 +480,14 @@ while running:
     
     if check_collision(player, cat):
         cat.collided = True
+        result = game_over_screen()
+        if result == "restart":
+            # Reset game state
+            player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
+            scroll_offset = 0
+        else:
+            running = False
+
 
     if player.health <= 0:
         result = game_over_screen()
