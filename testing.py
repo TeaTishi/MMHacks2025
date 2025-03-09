@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.onground = True
         self.health = 3
         self.max_health = 3
+        self.jump_sound = pygame.mixer.Sound("assets/sound/jump.wav")
 
     def draw(self, screen):
         if self.x_velocity >= 0:
@@ -65,6 +66,7 @@ class Player(pygame.sprite.Sprite):
         if self.onground:
             self.y_velocity = self.jumppower
             self.onground = False
+            self.jump_sound.play()
 
     def tileCollisions(self, tilemap, scroll_offset):
         self.onground = False
