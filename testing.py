@@ -32,7 +32,10 @@ class Player(pygame.sprite.Sprite):
         self.max_health = 3
 
     def draw(self, screen):
-        screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
+        if self.x_velocity >= 0:
+            screen.blit(pygame.image.load("assets/player/player.png"), self.rect)
+        elif self.x_velocity < 0:
+            screen.blit(pygame.image.load("assets/player/playerLeft.png"), self.rect)
 
     def get_damage(self):
         if self.health > 0:
@@ -118,18 +121,20 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(object):
-    walkRight = [pygame.image.load('assets/rats/rightrat_resized.png')]
-    walkLeft = [pygame.image.load('assets/rats/leftrat_resized.png')]
+    # walkRight = [pygame.image.load('assets/rats/rightrat_resized.png')]
+    # walkLeft = [pygame.image.load('assets/rats/leftrat_resized.png')]
 
-    def __init__(self, x, y, width, height, end):
+    def __init__(self, x, y, width, height, end, walkRight, walkLeft):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.path = [x, end]
         self.walkCount = 0
-        self.velocity = 3
+        self.velocity = 2
         self.rect = pygame.Rect(x, y, width, height)
+        self.walkRight = walkRight
+        self.walkLeft = walkLeft 
 
     def draw(self, screen, scroll_offset):
         self.move()
@@ -285,8 +290,14 @@ pygame.init()
 
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(500, 620, 100, 100, 1500)
-rat2 = Enemy(100, 1317, 100, 100, 1200)
+
+rat1_walkRight = [pygame.image.load("assets/rats/cuteRat2.png")]
+rat1_walkLeft = [pygame.image.load("assets/rats/cuteRatLeft2.png")]
+rat2_walkLeft = [pygame.image.load("assets/rats/leftrat_resized.png")]
+rat2_walkRight = [pygame.image.load("assets/rats/rightrat_resized.png")]
+rat = Enemy(500, 650, 100, 100, 1500, rat1_walkRight, rat1_walkLeft)
+rat3 = Enemy(620, 1000, 100, 100, 1300, rat1_walkRight, rat1_walkLeft)
+rat2 = Enemy(100, 1317, 100, 100, 1200, rat2_walkRight, rat2_walkLeft)
 cat = Cat(WIDTH/1.4, 2950, 100, 100, 1000)  # Create cat instance
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
@@ -307,6 +318,7 @@ def redrawGameWindow():
 
     player.draw(screen)
     rat.draw(screen, scroll_offset)
+    rat3.draw(screen, scroll_offset)
     rat2.draw(screen, scroll_offset)
     cat.draw(screen, scroll_offset)  # Draw the cat
 
