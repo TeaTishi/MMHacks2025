@@ -304,6 +304,17 @@ rat2_walkRight = [pygame.image.load("assets/rats/rightrat_resized.png")]
 rat = Enemy(500, 650, 100, 100, 1500, rat1_walkRight, rat1_walkLeft)
 rat3 = Enemy(620, 1000, 100, 100, 1300, rat1_walkRight, rat1_walkLeft)
 rat2 = Enemy(100, 1317, 100, 100, 1200, rat2_walkRight, rat2_walkLeft)
+
+rat4 = Enemy(620, 1450, 100, 100, 1300, rat1_walkRight, rat1_walkLeft)
+rat5 = Enemy(620, 2750, 100, 100, 1300, rat2_walkRight, rat2_walkLeft)
+rat6 = Enemy(620, 1500, 100, 100, 1300, rat2_walkRight, rat2_walkLeft)
+
+rat7 = Enemy(620, 2000, 100, 100, 1300, rat2_walkRight, rat2_walkLeft)
+rat8 = Enemy(620, 2500, 100, 100, 1300, rat2_walkRight, rat2_walkLeft)
+rat9 = Enemy(620, 3000, 500, 500, 1300, rat2_walkRight, rat2_walkLeft)
+
+
+
 cat = Cat(WIDTH/2, 2950, 100, 100, 1000)  # Create cat instance
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
@@ -326,6 +337,16 @@ def redrawGameWindow():
     rat.draw(screen, scroll_offset)
     rat3.draw(screen, scroll_offset)
     rat2.draw(screen, scroll_offset)
+    rat6.draw(screen, scroll_offset)
+    rat4.draw(screen, scroll_offset)
+    rat5.draw(screen, scroll_offset)
+
+    rat7.draw(screen, scroll_offset)
+    rat8.draw(screen, scroll_offset)
+    rat9.draw(screen, scroll_offset)
+
+
+
     cat.draw(screen, scroll_offset)  # Draw the cat
 
     # Draw hearts (player's health) in the top-left corner
