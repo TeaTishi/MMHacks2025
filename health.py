@@ -9,6 +9,99 @@ WIDTH = 1920
 HEIGHT = 1080
 FPS = 60
 
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 74)
+
+background_colour = pygame.image.load('assets/background.png')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+
+class Button():
+    def __init__(self, image, pos, text_input, font, base_color, hovering_color):
+        self.image = image
+        self.x_pos = pos[0]
+        self.y_pos = pos[1]
+        self.font = font
+        self.base_color, self.hovering_color = base_color, hovering_color
+        self.text_input = text_input
+        self.text = self.font.render(self.text_input, True, self.base_color)
+        if self.image is None:
+            self.image = self.text
+        self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
+        self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+
+    def update(self, screen):
+        if self.image is not None:
+            screen.blit(self.image, self.rect)
+        screen.blit(self.text, self.text_rect)
+
+    def checkForInput(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            return True
+        return False
+
+    def changeColor(self, position):
+        if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
+            self.text = self.font.render(self.text_input, True, self.hovering_color)
+        else:
+            self.text = self.font.render(self.text_input, True, self.base_color)
+
+# Function to create the main menu
+def main_menu():
+    while True:
+        screen.blit(background_colour, (0, 0))
+
+        # Mouse position
+        menu_mouse_pos = pygame.mouse.get_pos()
+
+        # Title text
+        title_text = font.render("MAIN MENU", True, (255, 255, 255))
+        title_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
+        screen.blit(title_text, title_rect)
+
+        # Play button
+        play_button = Button(
+            image=None,
+            pos=(WIDTH // 2, HEIGHT // 2),
+            text_input="PLAY",
+            font=font,
+            base_color=(255, 255, 255),
+            hovering_color=(0, 255, 0)
+        )
+
+        # Quit button
+        quit_button = Button(
+            image=None,
+            pos=(WIDTH // 2, HEIGHT // 2 + 100),
+            text_input="QUIT",
+            font=font,
+            base_color=(255, 255, 255),
+            hovering_color=(255, 0, 0)
+        )
+
+        # Update buttons
+        for button in [play_button, quit_button]:
+            button.changeColor(menu_mouse_pos)
+            button.update(screen)
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if play_button.checkForInput(menu_mouse_pos):
+                    return  # Exit the main menu and start the game
+                if quit_button.checkForInput(menu_mouse_pos):
+                    pygame.quit()
+                    sys.exit()
+
+        pygame.display.update()
+
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -294,12 +387,6 @@ def createGame():
     background_colour = pygame.image.load('assets/background.png')
     background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption('M')
-
-    clock = pygame.time.Clock()
-    font = pygame.font.Font(None, 74)
-
     player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
     rat = Enemy(100, 100, 100, 100, 1000)
     cat = Cat(WIDTH / 2, HEIGHT, 100, 100, 1000)  # Create cat instance
@@ -356,4 +443,5 @@ def createGame():
         redrawGameWindow()
 
 #pygame.init()
+main_menu()
 createGame()

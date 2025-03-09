@@ -285,7 +285,6 @@ def createGame():
         pygame.display.update()
 
 
-
     background_colour = pygame.image.load('assets/background.png')
     background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
