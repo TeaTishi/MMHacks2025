@@ -245,7 +245,6 @@ def redrawGameWindow():
     screen.blit(timer_surface, (WIDTH - 200, 20))
     pygame.display.update()
 
-    pygame.display.update()
 
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
