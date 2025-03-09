@@ -297,6 +297,8 @@ class Sound:
 pygame.init()
 
 def start_screen():
+    background_colour = pygame.image.load('assets/background.png')
+    background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -309,11 +311,45 @@ def start_screen():
                     return
 
         # Draw start screen
-        screen.fill((0, 0, 0))  # Black background
-        start_text = font.render("Press SPACE to Start", True, (255, 255, 255))  # White text
-        screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 2 - 50))
+        # screen.fill((0, 0, 0))  # Black background
+        
+
+
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        start_text = font.render("(Press SPACE to Start)", True, (255, 255, 255))
+        title = font.render("SEWAGE SEARCH", True, (255, 0, 0))
+        
+        screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 2 + 50))
+        screen.blit(title, (WIDTH // 2 - start_text.get_width() // 2 + 45, HEIGHT // 2 - 105))
 
         pygame.display.update()
+
+# def start_screen(): FOR NORMAL BG
+#     # Load and scale the background image
+#     background_colour = pygame.image.load('assets/background.png')
+#     background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+#     while True:
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 return
+
+#             # Start the game if SPACE is pressed
+#             if event.type == pygame.KEYDOWN:
+#                 if event.key == pygame.K_SPACE:
+#                     return
+
+#         # Draw the background image
+#         screen.blit(background_colour, (0, 0))
+
+#         # Draw start screen text
+#         start_text = font.render("Press SPACE to Start", True, (255, 255, 255))
+#         title = font.render("SEWAGE SEARCH", True, (255, 255, 255))
+#         screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 2 + 50))
+#         screen.blit(title, (WIDTH // 2 - start_text.get_width() // 2 + 25, HEIGHT // 2 - 105))
+
+#         pygame.display.update()
 
 start_screen()
 
