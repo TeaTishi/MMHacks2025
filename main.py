@@ -260,7 +260,7 @@ def createGame():
     def redrawGameWindow():
         screen.fill((0, 0, 0))  # Clear the screen
         screen.blit(background_colour, (0, -scroll_offset))  # Background scroll
-        screen.blit(background_colour, (0, -scroll_offset - HEIGHT))  # Continuous background scroll
+        screen.blit(background_colour, (0, -scroll_offset + HEIGHT))  # Continuous background scroll
         tilemap.render(screen, scroll_offset)  # Render tiles with scroll
 
         player.draw(screen)
