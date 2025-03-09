@@ -1,9 +1,5 @@
-import sys
-
 import pygame
 import os
-
-#from MMHacks2025.testing import scroll_threshold
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -215,8 +211,30 @@ class Sound:
         sound.play()
 
 
-def get_font(size):
-    return pygame.font.SysFont('Arial', size)
+pygame.init()
+
+background_colour = pygame.image.load('assets/background.png')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 74)
+
+player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
+rat = Enemy(100, 100, 100, 100, 1000)
+cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
+
+sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
+sound.play_music()
+
+game = Game()
+tilemap = Tilemap(game, tile_size=50)
+
+# Scrolling variables
+scroll_offset = 0
+scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
 
 def redrawGameWindow():
     screen.fill((0, 0, 0))  # Clear the screen
@@ -245,38 +263,10 @@ def redrawGameWindow():
     screen.blit(timer_surface, (WIDTH - 200, 20))
     pygame.display.update()
 
+    pygame.display.update()
 
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)
-
-def check_collision (player, cat):
-    return player.rect.colliderect(cat.rect)
-
-
-pygame.init()
-
-background_colour = pygame.image.load('assets/background.png')
-background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('M')
-
-clock = pygame.time.Clock()
-font = pygame.font.Font(None, 74)
-
-player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
-rat = Enemy(100, 100, 100, 100, 1000)
-cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
-
-sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
-sound.play_music()
-
-game = Game()
-tilemap = Tilemap(game, tile_size=50)
-
-# Scrolling variables
-scroll_offset = 0
-scroll_threshold = HEIGHT / 3  # Define a threshold for scrolling
 
 running = True
 while running:
@@ -284,12 +274,6 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-    # Draw the background image
-    screen.blit(background_colour, (0,0))
-
-    # Update the display
-    #pygame.display.flip()
 
     # Handle player input
     keys = pygame.key.get_pressed()
@@ -312,9 +296,5 @@ while running:
     # Check collisions
     if check_collision(player, rat):
         player.get_damage()
-        print("you lose!")
-
-    if check_collision(player, cat):
-        print("you win!")
 
     redrawGameWindow()
