@@ -226,8 +226,9 @@ class Sound:
 
 pygame.init()
 
-WIDTH = 1920
-HEIGHT = 1080
+WIDTH = 1020
+HEIGHT = 680
+FPS = 60
 #background_colour = (234, 212, 252)
 background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
@@ -236,7 +237,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('M')
 
 clock = pygame.time.Clock()
-FPS = 60
+font = pygame.font.Font(None, 74)
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(100, 300, 100, 100, 1000)
@@ -255,6 +256,13 @@ def redrawGameWindow():
     player.draw(screen)
     rat.draw(screen)
     cat.draw(screen)
+
+    elapsed_time = pygame.time.get_ticks() // 1000
+    minutes = elapsed_time // 60
+    seconds = elapsed_time % 60
+    timer_text = f"{minutes:02}:{seconds:02}"
+    timer_surface = font.render(timer_text, True, (255, 255, 255))
+    screen.blit(timer_surface, (WIDTH - 200, 20))
     pygame.display.update()
 
 def check_collision(player, enemy):
