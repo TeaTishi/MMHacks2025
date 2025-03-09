@@ -12,6 +12,9 @@ pygame.display.set_caption('M')
 clock = pygame.time.Clock()
 FPS = 60
 
+pygame.font.init()
+font = pygame.font.SysFont('Arial', 74)
+
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -293,7 +296,26 @@ class Sound:
 
 pygame.init()
 
+def start_screen():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
 
+            # Start the game if SPACE is pressed
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    return
+
+        # Draw start screen
+        screen.fill((0, 0, 0))  # Black background
+        start_text = font.render("Press SPACE to Start", True, (255, 255, 255))  # White text
+        screen.blit(start_text, (WIDTH // 2 - start_text.get_width() // 2, HEIGHT // 2 - 50))
+
+        pygame.display.update()
+
+start_screen()
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 
@@ -363,6 +385,34 @@ def redrawGameWindow():
 def check_collision(player, enemy):
     return player.rect.colliderect(enemy.rect)  
 
+def game_over_screen():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
+
+            # Restart the game if 'R' is pressed
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    return "restart"
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    return
+
+        # Draw game over screen
+        screen.fill((0, 0, 0))  # Black background
+        game_over_text = font.render("Game Over", True, (255, 0, 0))  # Red text
+        restart_text = font.render("Press R to Restart", True, (255, 255, 255))  # White text
+        quit_text = font.render("Press Q to Quit", True, (255, 255, 255))  # White text
+
+        # Center the text on the screen
+        screen.blit(game_over_text, (WIDTH // 2 - game_over_text.get_width() // 2, HEIGHT // 2 - 100))
+        screen.blit(restart_text, (WIDTH // 2 - restart_text.get_width() // 2, HEIGHT // 2))
+        screen.blit(quit_text, (WIDTH // 2 - quit_text.get_width() // 2, HEIGHT // 2 + 100))
+
+        pygame.display.update()
+
 running = True
 while running:
     clock.tick(FPS)
@@ -394,6 +444,15 @@ while running:
     
     if check_collision(player, cat):
         cat.collided = True
+
+    if player.health <= 0:
+        result = game_over_screen()
+        if result == "restart":
+            # Reset game state
+            player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
+            scroll_offset = 0
+        else:
+            running = False
 
     redrawGameWindow()
 
