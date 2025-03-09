@@ -289,8 +289,6 @@ def createGame():
         screen.blit(timer_surface, (WIDTH - 200, 20))
         pygame.display.update()
 
-        pygame.display.update()
-
 
 
     background_colour = pygame.image.load('assets/background.png')
@@ -304,7 +302,7 @@ def createGame():
 
     player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
     rat = Enemy(100, 100, 100, 100, 1000)
-    cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
+    cat = Cat(WIDTH / 2, HEIGHT, 100, 100, 1000)  # Create cat instance
 
     sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
     sound.play_music()
