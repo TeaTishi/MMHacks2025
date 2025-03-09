@@ -1,8 +1,8 @@
 import pygame
 import os
 
-WIDTH = 1020
-HEIGHT = 580
+WIDTH = 1920
+HEIGHT = 1080
 FPS = 60
 
 class Player(pygame.sprite.Sprite):
