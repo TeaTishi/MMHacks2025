@@ -1,9 +1,6 @@
 import pygame
 import os
 
-#from MMHacks2025.enemies import background_colour
-
-
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -16,8 +13,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = y
         self.x_velocity = 0
         self.y_velocity = 0
-        self.speed = 5
-
+        self.speed = 10
+        self.gravity = 3
+        self.jumppower = -30
+        self.onground = True
         self.health = 3
         self.max_health = 3
 
@@ -32,9 +31,12 @@ class Player(pygame.sprite.Sprite):
         if self.health > self.max_health:
             self.health -= 1
 
-    def update(self):
+    def update(self, tilemap, scroll_offset):
         self.rect.x += self.x_velocity
+        self.y_velocity += self.gravity
         self.rect.y += self.y_velocity
+
+        self.tileCollisions(tilemap)
 
         if self.rect.left < 0:
             self.rect.left = 0
@@ -45,6 +47,27 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
 
+    def jump(self):
+        if self.onground:
+            self.y_velocity = self.jumppower
+            self.onground = False
+
+    def tileCollisions(self, tilemap):
+        self.onground = False
+        for loc in tilemap.tilemap:
+            tile = tilemap.tilemap[loc]
+            tile_rect = pygame.Rect(
+                tile['pos'][0] * tilemap.tile_size,
+                tile['pos'][1] * tilemap.tile_size,
+                tilemap.tile_size,
+                tilemap.tile_size
+            )
+
+            if self.rect.colliderect(tile_rect):
+                if self.y_velocity > 0:
+                    self.rect.bottom = tile_rect.top
+                    self.y_velocity = 0
+                    self.onground = True
 
 
 class Enemy(object):
@@ -61,18 +84,18 @@ class Enemy(object):
         self.velocity = 3
         self.rect = pygame.Rect(x, y, width, height)
 
-    def draw(self, screen):
+    def draw(self, screen, scroll_offset):
         self.move()
         if self.walkCount + 1 >= 33:
             self.walkCount = 0
 
         if self.velocity > 0:
-            screen.blit(self.walkRight[0], (self.x, self.y))
+            screen.blit(self.walkRight[0], (self.x, self.y - scroll_offset))
         else:
-            screen.blit(self.walkLeft[0], (self.x, self.y))
+            screen.blit(self.walkLeft[0], (self.x, self.y - scroll_offset))
 
         self.rect.x = self.x
-        self.rect.y = self.y
+        self.rect.y = self.y - scroll_offset
 
     def move(self):
         if self.velocity > 0:
@@ -86,25 +109,20 @@ class Enemy(object):
             else:
                 self.velocity = self.velocity * -1
 
-class Cat(object):
-    #walkRight = [pygame.image.load('assets/rats/rightrat_resized.png')]
-    #walkLeft = [pygame.image.load('assets/rats/leftrat_resized.png')]
 
+class Cat(object):
     def __init__(self, x, y, width, height, end):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-        self.path = [x, end]
-        # self.walkCount = 0
-        # self.velocity = 3
         self.rect = pygame.Rect(x, y, width, height)
 
-    def draw(self, screen):
-        screen.blit(pygame.image.load("assets/cat/cat2.png"), self.rect)
-
+    def draw(self, screen, scroll_offset):
+        screen.blit(pygame.image.load("assets/cat/cat.png"), (self.x, self.y - scroll_offset))
         self.rect.x = self.x
-        self.rect.y = self.y
+        self.rect.y = self.y - scroll_offset
+
 
 class Tilemap:
     def __init__(self, game, tile_size=16):
@@ -117,22 +135,22 @@ class Tilemap:
         for i in range(28):
             self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
             self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
+            self.tilemap[str(3 + i) + ';21'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 21)}
+            self.tilemap[str(7 + i) + ';28'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 28)}
 
-    def render(self, surf):
-        # Render each tile from the tilemap
+    def render(self, surf, scroll_offset):
         for loc in self.tilemap:
             tile = self.tilemap[loc]
             tile_image = self.game.assets[tile['type']][tile['variant']]  # Get the tile image
             x_pos = tile['pos'][0] * self.tile_size  # X coordinate of the tile
             y_pos = tile['pos'][1] * self.tile_size  # Y coordinate of the tile
 
-            # Render the tile on the screen
-            surf.blit(tile_image, (x_pos, y_pos))
+            surf.blit(tile_image, (x_pos, y_pos - scroll_offset))
 
-        # Optionally render any offgrid tiles if needed
         for tile in self.offgrid_tiles:
             tile_image = self.game.assets[tile['type']][tile['variant']]
             surf.blit(tile_image, tile['pos'])
+
 
 class Game:
     def __init__(self):
@@ -140,23 +158,43 @@ class Game:
         self.load_assets()
 
     def load_assets(self):
-        # Path to the image
         img_path = 'assets/grass/1.png'
         if os.path.exists(img_path):
-            img = pygame.image.load(img_path)  # Load the image
-            img = pygame.transform.scale(img, (50, 50))  # Scale the image to 16x16
+            img = pygame.image.load(img_path)
+            img = pygame.transform.scale(img, (50, 50))
             img = img.convert()  # Convert the image for better performance
-            self.assets['grass'] = [img]  # Store the image under the 'grass' key
+            self.assets['grass'] = [img]
         else:
-            print(f"Error: {img_path} not found!")  # Print error if image is missing
+            print(f"Error: {img_path} not found!")
+
+class Sound:
+    def __init__(self, music_path, volume=0.5):
+        pygame.mixer.init()
+        self.music_path = music_path
+        self.volume = volume
+        self.load_music()
+
+    def load_music(self):
+        pygame.mixer.music.load(self.music_path)
+        pygame.mixer.music.set_volume(self.volume)
+
+    def play_music(self, loops=-1):
+        pygame.mixer.music.play(loops)
+
+    def stop_music(self):
+        pygame.mixer.music.stop()
+
+    def play_sound_effect(self, sound_path, volume=0.5):
+        sound = pygame.mixer.Sound(sound_path)
+        sound.set_volume(volume)
+        sound.play()
 
 
 pygame.init()
 
 WIDTH = 1920
 HEIGHT = 1080
-#background_colour = (234, 212, 252)
-background_colour = pygame.image.load('assets/background.jpg')
+background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -167,18 +205,28 @@ FPS = 60
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(100, 100, 100, 100, 1000)
-cat= Cat(WIDTH / 2, HEIGHT / 2, WIDTH / 2, HEIGHT, 1000)
+cat = Cat(WIDTH / 2, HEIGHT / 2, 100, 100, 1000)  # Create cat instance
 
-game = Game() 
+sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
+sound.play_music()
 
+game = Game()
 tilemap = Tilemap(game, tile_size=50)
 
+# Scrolling variables
+scroll_offset = 0
+scroll_threshold = 200  # Define a threshold for scrolling
+
 def redrawGameWindow():
-    #screen.fill(background_colour)
-    tilemap.render(screen) 
+    screen.fill((0, 0, 0))  # Clear the screen
+    screen.blit(background_colour, (0, scroll_offset))  # Background scroll
+    screen.blit(background_colour, (0, scroll_offset - HEIGHT))  # Continuous background scroll
+    tilemap.render(screen, scroll_offset)  # Render tiles with scroll
+
     player.draw(screen)
-    rat.draw(screen)
-    cat.draw(screen)
+    rat.draw(screen, scroll_offset)
+    cat.draw(screen, scroll_offset)  # Draw the cat
+
     pygame.display.update()
 
 def check_collision(player, enemy):
@@ -191,13 +239,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Draw the background image
-    screen.blit(background_colour, (0, 0))
-
-    # Update the display
-    #pygame.display.flip()
-
-
+    # Handle player input
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
         player.x_velocity = -player.speed
@@ -207,14 +249,15 @@ while running:
         player.x_velocity = 0
 
     if keys[pygame.K_w]:
-        player.y_velocity = -player.speed
-    elif keys[pygame.K_s]:
-        player.y_velocity = player.speed
-    else:
-        player.y_velocity = 0
+        player.jump()
 
-    player.update()
+    player.update(tilemap, scroll_offset)
 
+    # Scroll background when player drops past a certain threshold
+    if player.rect.bottom > HEIGHT - scroll_threshold:
+        scroll_offset += 5  # Adjust the scrolling speed
+
+    # Check collisions
     if check_collision(player, rat):
         player.get_damage()
 
