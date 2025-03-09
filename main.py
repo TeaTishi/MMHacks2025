@@ -1,5 +1,9 @@
+import sys
+
 import pygame
 import os
+
+from button import Button
 
 #from MMHacks2025.enemies import background_colour
 
@@ -160,7 +164,14 @@ background_colour = pygame.image.load('assets/background.jpg')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('M')
+#pygame.display.set_caption('M')
+pygame.display.set_caption('Menu')
+theBackground = pygame.image.load("assets/menu/menu.jpg")
+
+def get_font(size):
+    return pygame.font.SysFont('Arial', size)
+
+
 
 clock = pygame.time.Clock()
 FPS = 60
