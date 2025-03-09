@@ -103,11 +103,6 @@ class Cat(object):
     def draw(self, screen):
         screen.blit(pygame.image.load("assets/cat/cat.png"), self.rect)
 
-        # img = pygame.image.load(img_path)
-        # img = pygame.transform.scale(img, (50, 50))
-        # img = img.convert()  # Convert the image for better performance
-        # self.assets['grass'] = [img]  # Store the image under the 'grass' key
-
         self.rect.x = self.x
         self.rect.y = self.y
 
