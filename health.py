@@ -16,8 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.x_velocity = 0
         self.y_velocity = 0
         self.speed = 10
-        self.gravity = 8
-        self.jumppower = -100
+        self.gravity = 3
+        self.jumppower = -30
         self.onground = True
         self.health = 3
         self.max_health = 3
@@ -40,13 +40,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.y_velocity
 
         self.tileCollisions(tilemap)
-        
-        if self.rect.bottom >= HEIGHT:
-            self.rect.bottom = HEIGHT
-            self.y_velocity = 0
-            self.on_ground = True
-        else:
-            self.on_ground = False
 
         if self.rect.left < 0:
             self.rect.left = 0
