@@ -167,6 +167,16 @@ class Game:
         else:
             print(f"Error: {img_path} not found!")
 
+        # Load heart images
+        empty_heart_path = 'assets/heart/emptyHeart.png'
+        filled_heart_path = 'assets/heart/filledHeart.png'
+
+        if os.path.exists(empty_heart_path) and os.path.exists(filled_heart_path):
+            self.assets['empty_heart'] = pygame.transform.scale(pygame.image.load(empty_heart_path), (30, 30))
+            self.assets['filled_heart'] = pygame.transform.scale(pygame.image.load(filled_heart_path), (30, 30))
+        else:
+            print(f"Error: Heart images not found!")
+
 class Sound:
     def __init__(self, music_path, volume=0.5):
         pygame.mixer.init()
@@ -215,7 +225,7 @@ tilemap = Tilemap(game, tile_size=50)
 
 # Scrolling variables
 scroll_offset = 0
-scroll_threshold = HEIGHT /2.5 # Define a threshold for scrolling
+scroll_threshold = HEIGHT / 3 # Define a threshold for scrolling
 
 def redrawGameWindow():
     screen.fill((0, 0, 0))  # Clear the screen
@@ -226,6 +236,15 @@ def redrawGameWindow():
     player.draw(screen)
     rat.draw(screen, scroll_offset)
     cat.draw(screen, scroll_offset)  # Draw the cat
+
+    # Draw hearts (player's health) in the top-left corner
+    heart_x = 250  # X position for the first heart
+    heart_y = 150  # Y position for the hearts
+
+    for i in range(player.health):
+        screen.blit(game.assets['filled_heart'], (heart_x + i * 40, heart_y))  # Draw filled hearts
+    for i in range(player.max_health - player.health):
+        screen.blit(game.assets['empty_heart'], (heart_x + (player.health + i) * 40, heart_y))  # Draw empty hearts
 
     pygame.display.update()
 
