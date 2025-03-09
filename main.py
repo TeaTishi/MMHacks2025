@@ -3,6 +3,10 @@ import os
 
 #from MMHacks2025.enemies import background_colour
 
+WIDTH = 1920
+HEIGHT = 1080
+FPS = 60
+
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -60,8 +64,6 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT
 
     def jump(self):
-        print("jump initialized")
-        print(self.on_ground)
         if self.on_ground:
             self.y_velocity = self.jumppower
             self.on_ground = False
@@ -223,8 +225,6 @@ class Sound:
 
 pygame.init()
 
-WIDTH = 1920
-HEIGHT = 1080
 #background_colour = (234, 212, 252)
 background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
@@ -233,7 +233,6 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('M')
 
 clock = pygame.time.Clock()
-FPS = 60
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(100, 100, 100, 100, 1000)
