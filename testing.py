@@ -168,10 +168,14 @@ class Cat(object):
         self.y = y
         self.width = width
         self.height = height
+        self.collided = False
         self.rect = pygame.Rect(x, y, width, height)
 
     def draw(self, screen, scroll_offset):
-        screen.blit(pygame.image.load("assets/cat/cat.png"), (self.x, self.y - scroll_offset))
+        if self.collided:
+            screen.blit(pygame.image.load("assets/rats/evilBoss.png"), (self.x, self.y - scroll_offset))
+        else:
+            screen.blit(pygame.image.load("assets/cat/cat.png"), (self.x, self.y - scroll_offset))
         self.rect.x = self.x
         self.rect.y = self.y - scroll_offset
 
@@ -298,7 +302,7 @@ rat2_walkRight = [pygame.image.load("assets/rats/rightrat_resized.png")]
 rat = Enemy(500, 650, 100, 100, 1500, rat1_walkRight, rat1_walkLeft)
 rat3 = Enemy(620, 1000, 100, 100, 1300, rat1_walkRight, rat1_walkLeft)
 rat2 = Enemy(100, 1317, 100, 100, 1200, rat2_walkRight, rat2_walkLeft)
-cat = Cat(WIDTH/1.4, 2950, 100, 100, 1000)  # Create cat instance
+cat = Cat(WIDTH/2, 2950, 100, 100, 1000)  # Create cat instance
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
 sound.play_music()
@@ -334,7 +338,7 @@ def redrawGameWindow():
     pygame.display.update()
 
 def check_collision(player, enemy):
-    return player.rect.colliderect(enemy.rect)
+    return player.rect.colliderect(enemy.rect)  
 
 running = True
 while running:
@@ -364,6 +368,9 @@ while running:
     # Check collisions
     if check_collision(player, rat):
         player.get_damage()
+    
+    if check_collision(player, cat):
+        cat.collided = True
 
     redrawGameWindow()
 
