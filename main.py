@@ -121,7 +121,7 @@ class Tilemap:
         # Example tilemap generation with tiles placed at specific coordinates
         for i in range(28):
             self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
-            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
+            self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)} 
 
     def render(self, surf):
         # Render each tile from the tilemap
