@@ -50,20 +50,16 @@ class Button():
         else:
             self.text = self.font.render(self.text_input, True, self.base_color)
 
-# Function to create the main menu
 def main_menu():
     while True:
         screen.blit(background_colour, (0, 0))
 
-        # Mouse position
         menu_mouse_pos = pygame.mouse.get_pos()
 
-        # Title text
         title_text = font.render("MAIN MENU", True, (255, 255, 255))
         title_rect = title_text.get_rect(center=(WIDTH // 2, HEIGHT // 4))
         screen.blit(title_text, title_rect)
 
-        # Play button
         play_button = Button(
             image=None,
             pos=(WIDTH // 2, HEIGHT // 2),
@@ -73,7 +69,6 @@ def main_menu():
             hovering_color=(0, 255, 0)
         )
 
-        # Quit button
         quit_button = Button(
             image=None,
             pos=(WIDTH // 2, HEIGHT // 2 + 100),
@@ -83,19 +78,17 @@ def main_menu():
             hovering_color=(255, 0, 0)
         )
 
-        # Update buttons
         for button in [play_button, quit_button]:
             button.changeColor(menu_mouse_pos)
             button.update(screen)
 
-        # Event handling
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button.checkForInput(menu_mouse_pos):
-                    return  # Exit the main menu and start the game
+                    return
                 if quit_button.checkForInput(menu_mouse_pos):
                     pygame.quit()
                     sys.exit()

@@ -1,6 +1,17 @@
 import pygame
 import os
 
+WIDTH = 1920
+HEIGHT = 1080
+background_colour = pygame.image.load('assets/background.png')
+background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
+
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption('M')
+
+clock = pygame.time.Clock()
+FPS = 60
+
 class Player(pygame.sprite.Sprite):
     COLOR = (255, 0, 0)
 
@@ -64,10 +75,46 @@ class Player(pygame.sprite.Sprite):
             )
 
             if self.rect.colliderect(tile_rect):
-                if self.y_velocity > 0:  # Falling
-                    self.rect.bottom = tile_rect.top
-                    self.y_velocity = 0
-                    self.onground = True
+                # Calculate overlap in x and y directions
+                dx = self.rect.centerx - tile_rect.centerx
+                dy = self.rect.centery - tile_rect.centery
+
+                # Calculate absolute overlap in x and y directions
+                abs_dx = abs(dx)
+                abs_dy = abs(dy)
+
+                # Resolve collision based on the direction of overlap
+                if abs_dx > abs_dy:
+                    # Horizontal collision (left or right)
+                    if dx > 0:
+                        # Player is to the right of the tile
+                        self.rect.left = tile_rect.right
+                    else:
+                        # Player is to the left of the tile
+                        self.rect.right = tile_rect.left
+                    self.x_velocity = 0  # Stop horizontal movement
+                else:
+                    # # Vertical collision (top or bottom)
+                    # if dy > 0:
+                    #     # Player is below the tile
+                    #     self.rect.bottom = tile_rect.top
+                    #     self.y_velocity = 0
+                    #     self.onground = True
+                    # else:
+                    #     # Player is above the tile
+                    #     self.rect.top = tile_rect.bottom
+                    #     self.y_velocity = 0
+
+            # if self.rect.colliderect(tile_rect):
+                    if self.y_velocity > 0:
+                        self.rect.bottom = tile_rect.top
+                        self.y_velocity = 0
+                        self.onground = True
+                
+            #     if self.x_velocity > 0:
+            #         self.rect.right = tile_rect.left +1
+            #     elif self.x_velocity < 0:
+            #         self.rect.left = tile_rect.right -1
 
 
 class Enemy(object):
@@ -235,20 +282,11 @@ class Sound:
 
 pygame.init()
 
-WIDTH = 1920
-HEIGHT = 1080
-background_colour = pygame.image.load('assets/background.png')
-background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('M')
-
-clock = pygame.time.Clock()
-FPS = 60
 
 player = Player(WIDTH / 2, HEIGHT / 2, 50, 50)
 rat = Enemy(500, 620, 100, 100, 1500)
-rat2 = Enemy(100, 1200, 100, 100, 1200)
+rat2 = Enemy(100, 1317, 100, 100, 1200)
 cat = Cat(WIDTH/1.4, 2950, 100, 100, 1000)  # Create cat instance
 
 sound = Sound(music_path="assets/sound/bgmusic.mp3", volume=0.5)
