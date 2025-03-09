@@ -187,13 +187,11 @@ background_colour = pygame.image.load('assets/background.png')
 background_colour = pygame.transform.scale(background_colour, (WIDTH, HEIGHT))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-#pygame.display.set_caption('M')
-pygame.display.set_caption('Menu')
-theBackground = pygame.image.load("assets/menu/menu.jpg")
+pygame.display.set_caption('M')
+
 
 def get_font(size):
     return pygame.font.SysFont('Arial', size)
-
 
 
 clock = pygame.time.Clock()
@@ -233,7 +231,7 @@ while running:
             running = False
 
     # Draw the background image
-    screen.blit(background_colour, (0, 0))
+    screen.blit(background_colour, (0,0))
 
     # Update the display
     #pygame.display.flip()
