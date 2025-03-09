@@ -144,9 +144,41 @@ class Tilemap:
         self.offgrid_tiles = []
 
         # Example tilemap generation with tiles placed at specific coordinates
+        self.tilemap['16;10'] = {'type': 'grass', 'variant': 0, 'pos': (16, 10)}
+        self.tilemap['14;9'] = {'type': 'grass', 'variant': 0, 'pos': (14, 9)}
+        self.tilemap['12;8'] = {'type': 'grass', 'variant': 0, 'pos': (12, 8)}
+        self.tilemap['10;7'] = {'type': 'grass', 'variant': 0, 'pos': (10, 7)}
+        self.tilemap['8;6'] = {'type': 'grass', 'variant': 0, 'pos': (8, 6)}
+
+
         for i in range(28):
-            self.tilemap[str(3 + i) + ';7'] = {'type': 'grass', 'variant': 0, 'pos': (3 + i, 7)}
             self.tilemap[str(7 + i) + ';14'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 14)}
+            self.tilemap[str(i) + ';21'] = {'type': 'grass', 'variant': 0, 'pos': (i, 21)}
+            self.tilemap[str(7 + i) + ';28'] = {'type': 'grass', 'variant': 0, 'pos': (7 + i, 28)}
+
+        for i in range(9):
+            self.tilemap['7;' + str(5+i)] = {'type': 'grass', 'variant': 0, 'pos': (7, 5+i)}
+
+        for i in range(4):
+            self.tilemap[str(18+i) + ';11'] = {'type': 'grass', 'variant': 0, 'pos': (18+i, 11)}
+            
+
+        for i in range(60):
+            self.tilemap['1;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (1, i)}
+            self.tilemap['34;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (34, i)}
+
+            self.tilemap['2;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (2, i)}
+            self.tilemap['35;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (35, i)}
+
+            self.tilemap['3;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (3, i)}
+            self.tilemap['36;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (36, i)}
+
+            self.tilemap['4;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (4, i)}
+            self.tilemap['33;' + str(i)] = {'type': 'grass', 'variant': 0, 'pos': (33, i)}
+
+        for i in range(36):
+            self.tilemap[str(i) + ';60'] = {'type': 'grass', 'variant': 0, 'pos': (i, 60)}
+
 
     def render(self, surf, scroll_offset):  # Added scroll_offset here
         # Render each tile from the tilemap
@@ -227,8 +259,8 @@ def check_collision (player, cat):
 def createGame():
     def redrawGameWindow():
         screen.fill((0, 0, 0))  # Clear the screen
-        screen.blit(background_colour, (0, scroll_offset))  # Background scroll
-        screen.blit(background_colour, (0, scroll_offset - HEIGHT))  # Continuous background scroll
+        screen.blit(background_colour, (0, -scroll_offset))  # Background scroll
+        screen.blit(background_colour, (0, -scroll_offset - HEIGHT))  # Continuous background scroll
         tilemap.render(screen, scroll_offset)  # Render tiles with scroll
 
         player.draw(screen)
