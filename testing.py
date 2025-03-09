@@ -349,9 +349,13 @@ while running:
     if player.rect.bottom > HEIGHT - scroll_threshold:
         scroll_offset += 10  # Adjust the scrolling speed
 
-    # Check collisions
-    if check_collision(player, rat):
-        player.get_damage()
+        # Check collisions
+        if check_collision(player, rat):
+            player.get_damage()
+            print("you lose!")
+
+        if check_collision(player, cat):
+            print("you win!")
 
     redrawGameWindow()
 

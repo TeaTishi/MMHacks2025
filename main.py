@@ -5,6 +5,7 @@ import os
 
 from testing import scroll_threshold
 
+
 WIDTH = 1920
 HEIGHT = 108
 FPS = 60
