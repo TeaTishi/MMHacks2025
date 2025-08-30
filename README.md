@@ -41,7 +41,7 @@ Inspired by **Louis Wain**, the English artist famous for cat illustrations.
 
 ![start screen](images/start.png)
 ![game](images/game.png)
-![end screen](end/game.png)
+![end screen](images/end.png)
 
 ---
 
